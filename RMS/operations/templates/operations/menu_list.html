@@ -1,0 +1,35 @@
+{% extends 'operations/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="h4 mb-0">Menu</h2>
+        <p class="text-muted small mb-0">List of menu items and pricing.</p>
+    </div>
+    <a class="btn btn-sm btn-light" href="/admin/operations/menuitem/add/">Add Menu Item</a>
+</div>
+
+<div class="table-responsive card-accent p-3 bg-white">
+<table class="table table-striped table-hover mb-0">
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th class="text-end">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for m in menu_items %}
+        <tr>
+            <td class="fw-semibold">{{ m.name }}</td>
+            <td><span class="badge bg-info text-dark">{{ m.category }}</span></td>
+            <td class="text-end">{{ m.price }}</td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="3">No menu items.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

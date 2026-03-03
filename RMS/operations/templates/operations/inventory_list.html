@@ -1,0 +1,61 @@
+{% extends 'operations/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="h4 mb-0">Inventory</h2>
+        <p class="text-muted small mb-0">Keep track of ingredients and restock when low.</p>
+    </div>
+    <div>
+        <a class="btn btn-sm btn-light" href="/admin/operations/inventoryitem/add/">Add Item</a>
+    </div>
+</div>
+
+<div class="table-responsive card-accent p-3 bg-white">
+<table class="table table-striped table-hover align-middle mb-0">
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Min limit</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td class="fw-semibold">{{ item.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit }}</td>
+            <td>{{ item.min_stock_limit }}</td>
+            <td>
+                {% if 'Critical' in item.status_color %}
+                    <span class="badge bg-danger">{{ item.status_color }}</span>
+                {% elif 'Low' in item.status_color %}
+                    <span class="badge bg-warning text-dark">{{ item.status_color }}</span>
+                {% else %}
+                    <span class="badge bg-success">{{ item.status_color }}</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="d-flex gap-2">
+                    <form method="post" action="" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <input name="amount" placeholder="amount" class="form-control form-control-sm small-input me-2">
+                        <button type="submit" class="btn btn-sm btn-primary">Restock</button>
+                    </form>
+                    <a href="/admin/operations/inventoryitem/{{ item.id }}/change/" class="btn btn-outline-secondary btn-sm">Edit</a>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="6">No inventory items found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}
